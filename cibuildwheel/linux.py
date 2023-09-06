@@ -377,6 +377,7 @@ def build_in_container(
 
 
 def build(options: Options, tmp_path: Path) -> None:  # noqa: ARG001
+    print("### LINUX ###")
     try:
         # check the container engine is installed
         subprocess.run(

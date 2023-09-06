@@ -310,6 +310,7 @@ def setup_python(
 
 
 def build(options: Options, tmp_path: Path) -> None:
+    print("### MACOS ###")
     python_configurations = get_python_configurations(
         options.globals.build_selector, options.globals.architectures
     )
