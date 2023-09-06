@@ -188,6 +188,7 @@ def setup_rust_cross_compile(
     python_libs_base: Path,  # noqa: ARG001
     env: MutableMapping[str, str],
 ) -> None:
+    print("### SETUP RUST CROSS COMPILE")
     # Assume that MSVC will be used, because we already know that we are
     # cross-compiling. MinGW users can set CARGO_BUILD_TARGET themselves
     # and we will respect the existing value.
@@ -343,6 +344,7 @@ def setup_python(
     else:
         assert_never(build_frontend)
 
+    print("### PYTHON LIBS BASE", python_libs_base)
     if python_libs_base:
         # Set up the environment for various backends to enable cross-compilation
         setup_setuptools_cross_compile(tmp, python_configuration, python_libs_base, env)
