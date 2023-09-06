@@ -220,6 +220,7 @@ def setup_python(
     environment: ParsedEnvironment,
     build_frontend: BuildFrontend,
 ) -> dict[str, str]:
+    print("Setup python")
     tmp.mkdir()
     implementation_id = python_configuration.identifier.split("-")[0]
     python_libs_base = None
@@ -261,6 +262,7 @@ def setup_python(
     # re-install uses updated pip and correctly builds pip.exe for the target.
     # This can be removed once ARM64 Pythons (currently 3.9 and 3.10) bundle
     # pip versions newer than 21.3.
+    print('###', python_configuration.arch)
     if python_configuration.arch == "ARM64" and Version(get_pip_version(env)) < Version("21.3"):
         call(
             "python",
@@ -291,6 +293,8 @@ def setup_python(
 
     # update env with results from CIBW_ENVIRONMENT
     env = environment.as_dictionary(prev_environment=env)
+
+    print('###', env)
 
     # check what Python version we're on
     call("where", "python", env=env)
@@ -355,6 +359,8 @@ def build(options: Options, tmp_path: Path) -> None:
 
     if not python_configurations:
         return
+    
+    print("Print 1")
 
     try:
         before_all_options_identifier = python_configurations[0].identifier
@@ -370,6 +376,8 @@ def build(options: Options, tmp_path: Path) -> None:
 
         built_wheels: list[Path] = []
 
+        print("Print 2")
+
         for config in python_configurations:
             build_options = options.build_options(config.identifier)
             build_frontend = build_frontend_or_default(build_options.build_frontend)
@@ -379,6 +387,8 @@ def build(options: Options, tmp_path: Path) -> None:
             identifier_tmp_dir.mkdir()
             built_wheel_dir = identifier_tmp_dir / "built_wheel"
             repaired_wheel_dir = identifier_tmp_dir / "repaired_wheel"
+
+            print("Print 3")
 
             dependency_constraint_flags: Sequence[PathOrStr] = []
             if build_options.dependency_constraints:
@@ -396,14 +406,18 @@ def build(options: Options, tmp_path: Path) -> None:
                 build_frontend,
             )
 
+            print("Print 4")
+
             compatible_wheel = find_compatible_wheel(built_wheels, config.identifier)
             if compatible_wheel:
+                print("Print 5.True")
                 log.step_end()
                 print(
                     f"\nFound previously built wheel {compatible_wheel.name}, that's compatible with {config.identifier}. Skipping build step..."
                 )
                 repaired_wheel = compatible_wheel
             else:
+                print("Print 5.False")
                 # run the before_build command
                 if build_options.before_build:
                     log.step("Running before_build...")
@@ -420,6 +434,7 @@ def build(options: Options, tmp_path: Path) -> None:
                 extra_flags = split_config_settings(build_options.config_settings, build_frontend)
 
                 if build_frontend == "pip":
+                    print("Print 6 Pip")
                     extra_flags += get_build_verbosity_extra_flags(build_options.build_verbosity)
                     # Path.resolve() is needed. Without it pip wheel may try to fetch package from pypi.org
                     # see https://github.com/pypa/cibuildwheel/pull/369
@@ -435,6 +450,7 @@ def build(options: Options, tmp_path: Path) -> None:
                         env=env,
                     )
                 elif build_frontend == "build":
+                    print("Print 6 Build")
                     if not 0 <= build_options.build_verbosity < 2:
                         msg = f"build_verbosity {build_options.build_verbosity} is not supported for build frontend. Ignoring."
                         log.warning(msg)
