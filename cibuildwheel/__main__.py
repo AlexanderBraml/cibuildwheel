@@ -292,6 +292,8 @@ def build_in_directory(args: CommandLineArguments) -> None:
     # Add CIBUILDWHEEL environment variable
     os.environ["CIBUILDWHEEL"] = "1"
 
+    print('CARGO_BUILD_TARGET:', os.environ["CARGO_BUILD_TARGET"], 'CIBW_CARGO_BUILD_TARGET', os.environ["CIBW_CARGO_BUILD_TARGET"])
+
     # Python is buffering by default when running on the CI platforms, giving problems interleaving subprocess call output with unflushed calls to 'print'
     sys.stdout = Unbuffered(sys.stdout)  # type: ignore[assignment]
 
