@@ -197,7 +197,7 @@ def setup_rust_cross_compile(
         "ARM64": "aarch64-pc-windows-msvc",
     }.get(python_configuration.arch)
 
-    print(f'### CARGO TARGET {cargo_target} {env.get("CARGO_BUILD_TARGET")} {env["CARGO_BUILD_TARGET"]}')
+    print('CARGO_BUILD_TARGET:', os.environ.get("CARGO_BUILD_TARGET", 'nix'), 'CIBW_CARGO_BUILD_TARGET', os.environ.get("CIBW_CARGO_BUILD_TARGET", 'nix'))
 
     # CARGO_BUILD_TARGET is the variable used by Cargo and setuptools_rust
     if env.get("CARGO_BUILD_TARGET"):
