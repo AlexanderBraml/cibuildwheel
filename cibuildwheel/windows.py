@@ -197,6 +197,8 @@ def setup_rust_cross_compile(
         "ARM64": "aarch64-pc-windows-msvc",
     }.get(python_configuration.arch)
 
+    print(f'### CARGO TARGET {cargo_target} {env.get("CARGO_BUILD_TARGET")} {env["CARGO_BUILD_TARGET"]}')
+
     # CARGO_BUILD_TARGET is the variable used by Cargo and setuptools_rust
     if env.get("CARGO_BUILD_TARGET"):
         if env["CARGO_BUILD_TARGET"] != cargo_target:
